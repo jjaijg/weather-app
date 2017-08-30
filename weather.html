@@ -1,0 +1,348 @@
+
+<!DOCTYPE html><html class=''>
+<head>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'><link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.css'>
+<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+<style>
+/*googe fonts*/
+@import url('https://fonts.googleapis.com/css?family=Lobster+Two:700i');
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
+@import url('https://fonts.googleapis.com/css?family=Dosis');
+
+body{  
+  /*  images for different climates...
+  cloudy:  https://wallpapercave.com/wp/otQxyXg.jpg
+  
+  clear sky:
+  http://wallup.net/wp-content/uploads/2015/12/244209-nature-landscape-blue-clear_sky-valley-mountain.jpg
+  
+  clear-night:
+ https://images2.alphacoders.com/546/546077.jpg
+  
+  cloudy-night:
+  https://1366x768wallpaper.com/no-watermarks/originals/2015/10/06/cloudy-night-with-full-moon._.jpg
+  
+  rain:
+ https://images4.alphacoders.com/831/thumb-1920-83196.jpg
+  
+  snow:
+  https://lh3.ggpht.com/ioR_k1kR_3W27CcRBnkemAqTeD7MVaPaALUrViOXp_k2QKlLQ9zwSBwb7hPjTUrZUes=h900
+  
+  wind;
+  http://hdwallpaperwebs.com/wp-content/uploads/2015/09/Dandelion-Flowers-Free-HD-Background-Wallpaper-06.jpg
+  
+  fog:
+ http://thiswallpaper.com/cdn/hdwallpapers/1054/dock%20fog%20best%20high%20resolution%20wallpaper.jpg
+  
+  background-image:url("http://thiswallpaper.com/cdn/hdwallpapers/1054/dock%20fog%20best%20high%20resolution%20wallpaper.jpg");*/
+  background-color:black;
+}
+.message{
+ padding-top:60px; 
+}
+h1{
+  font-family:"Lobster Two",cursive;
+  font-size:5em;
+  color:white;
+}
+.h-c{
+  padding-top:30px;
+}
+.main{
+  border-radius:10px;
+  display: inline-block;
+  position: relative;
+  /*border: 3px solid grey;*/
+  
+}
+.main-front{
+  padding-top:40px;
+  padding-bottom:40px; 
+  margin:30px 0 15px 0;
+  font-family:'Dosis', sans-serif;
+  color:white;
+  font-size:40px; 
+}
+hr{
+  width:75%;
+  border-color:white;
+}
+#weather-c,#weather-f{
+  padding-top:12px;
+  font-size:50px;
+}
+#f,#c{
+  font-size:50px;
+  background-color:transparent;
+  padding:0 0 0 8px;
+  margin-top:-20px;
+  border-width:0px;
+  color:white;
+  cursor:pointer;
+}
+button:focus{
+  outline:0px !important;
+  box-shadow:0 0 0 0 !important;
+}
+#temp-c,temp-f,#c:hover,#f:hover{
+  font-size:55px;
+}
+#w-icon{
+  margin-top:30px;
+  font-size:3em;
+}
+.detail{
+  padding-top:20px;
+  font-family:'Dosis', sans-serif;
+ font-size:30px;
+}
+
+a,a:hover{
+  text-decoration:none;
+  color:deeppink;
+  font-family: "Lobster Two",cursive;
+}
+.p{
+  color:deeppink;
+}
+</style></head><body>
+
+<div class="container-fluid message">
+  <h1 class="text-center animated zoomIn">
+    Weather App
+  </h1>
+</div>
+<div class="container-fluid h-c">
+  <div class="row ">
+    <div class="col-1 col-md-3 col-lg-4"></div>
+    <div class="col-10  col-md-6 col-lg-4 ">
+      <div class="container text-center main">
+        <div class="main-front">
+        <div id="address">
+          <div id="region"></div>
+          <div id="country"></div>
+        </div>
+        <hr>
+        <div id="weather-c">
+          <span id="temp-c">Loading...</span><button id="c" class="btn"></button> 
+        </div>
+        <div id="weather-f">
+          <span id="temp-f">Loading...</span><button id="f" class="btn"></button> 
+        </div>
+        <div id="w-icon">
+          <i id="icon">
+            <em><p class="detail"></p></em>
+          </i>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="col-1 col-md-3 col-lg-4"></div>
+    <div class="col text-center">
+      <br>
+      <p class="p">Written and Coded by <a href="https://www.freecodecamp.org/jjaijg" target="blank"> Jai Ganesh</a></p>
+      <p class="p">FreeCodeCamp <i class="fa fa-fw fa-free-code-camp"></i> challenge <a href="https://codepen.io/jaijg/full/qXyVjP" target="blank">Build a Weather App</a></p>
+    </div>
+  </div>
+</div>
+
+<script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script><script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script>/* tested openweather api..
+$('document').ready(function(){
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(position){
+    var latitude=position.coords.latitude;
+    var longitude=position.coords.longitude;
+      $("#data").html("You are here:<br>latitude: " + latitude + "<br>longitude: " + longitude);
+    });
+  }else{
+    var latitude=0;
+    var longitude=0;
+  }
+ 
+  $.getJSON('api.openweathermap.org/data/2.//5/weather?lat=9.4505673&lon=77.80241699999999', function(json){
+    console.log('hi');
+    $("#data").html(JSON.stringify(json));
+  });
+});
+
+$.getJSON("https://api.ipify.org/?format=json", function(e) {
+    $("#data").html(e.ip);
+});*/
+
+/*tested to get location using ip..but its not good choice
+$("document").ready(function(){
+  $.getJSON("https://freegeoip.net/json/", function(data) {
+    if(data.dity)
+      var city=data.city;
+    else
+      var city = "not fund";
+    var lat=data.latitude;
+    var lon=data.longitude;
+ $("#address").html(city+" lat:"+lat+" lon:"+lon);
+    var url="https://api.darksky.net/forecast/af421490ce466dbd8d6c66a3c3ca6b1e/"+lat+","+lon+"?callback=?&units=si";
+    $.getJSON(url,function(json){
+      console.log(json);
+      var celsius= json.currently.temperature;
+      var fahrenheit = (celsius*9/5)+32;
+      alert(celsius);
+      alert(fahrenheit);
+    });
+  });
+});*/
+/*
+$.getJSON("https://freegeoip.net/json/", function(data) {
+    $("#address").html(JSON.stringify(data));
+});*/
+////generate random rgba value
+function random_rgba() {
+    var o = Math.round, r = Math.random, s = 255;
+    var rgbb= 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',0.3 )';
+  // + r().toFixed(1) +
+  $(".main").css('background-color', rgbb);// change color of main class
+}
+
+//color generator
+function get_random_color() {
+    //var letters = 'AB'.split('');
+  var letters="012367".split('');
+    var color = '#';
+    for (var i=0; i<3; i++ ) {if (window.CP.shouldStopExecution(1)){break;}
+        color += letters[Math.floor(Math.random() * letters.length)];
+    }
+window.CP.exitedLoop(1);
+
+    //$(".main").css('border-color', color);
+    return -1;
+}
+
+//error func for location
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("An unknown error occurred.");
+            break;
+    }
+}
+
+//on clicking celsius/fahrenheit
+$(".btn").on("click",function(){
+  $("#weather-c").toggle();
+  $("#weather-f").toggle();
+});
+
+$("document").ready(function(){
+  
+  var img='';//for image url
+  $("body").addClass("img-fluid");//for responsive bg-img
+  random_rgba();//generate rand-color 
+  $("#weather-f").hide(); // hide f show celsius
+  
+  //get lat and long using html5 geolocation
+  if(navigator.geolocation){
+    
+  navigator.geolocation.getCurrentPosition(function(location){
+      var lat = location.coords.latitude;
+      var lon = location.coords.longitude;
+      //debug
+      //alert("latitude:"+lat+"  Longitude:"+lon);
+    
+    //get location name using google geolocation
+      var geolocation = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + '%2C' + lon + '&language=en';
+      
+      $.getJSON(geolocation).done(function(location){
+        //debug
+        //console.log(location); use this to see the location object received
+        var l =location.results[2].formatted_address;
+        l = l.split(",");
+        $("#region").html(l[0]+",");
+        $("#country").html(l[1]+", "+l[2]);
+        //debug
+        //alert("address: "+l);
+        
+        //get temperature & icon from darksky api
+        var url="https://api.darksky.net/forecast/af421490ce466dbd8d6c66a3c3ca6b1e/"+lat+","+lon+"?callback=?&units=si";
+        $.getJSON(url,function(json){
+          console.log(json);
+          var celsius= json.currently.temperature;
+          var fahrenheit = (celsius*9/5)+32;
+          var icon = json.currently.icon;
+          $("#temp-c").html(Math.round(celsius, 1).toFixed(1));
+          $("#c").html("&deg;C");
+          $("#temp-f").html(Math.round(fahrenheit, 1).toFixed(1));
+          $("#f").html("&deg;F");
+          //icon="wind";
+          $("#icon").addClass("wi wi-forecast-io-"+icon);
+          $(".detail").html(icon);
+        //alert("current temp in celsius:"+celsius);
+        //alert("current temp in farenheit:"+fahrenheit);
+          
+          //change background-image
+          switch(icon){
+            case "clear-day":
+            case "partly-cloudy-day":
+              img = "url(https://wallup.net/wp-content/uploads/2015/12/244209-nature-landscape-blue-clear_sky-valley-mountain.jpg)";
+              $(".p").css("color","white");
+              $("a").css("color","white");
+              break;
+            case "cloudy":
+              img = "url(https://wallpapercave.com/wp/otQxyXg.jpg)";
+              $("h1").css("color","white");
+              break;
+            case "clear-night":
+              img = "url(https://images2.alphacoders.com/546/546077.jpg)";
+              $("h1").css("color","white");
+              $(".p").css("color","white");
+              $("a").css("color","white");
+              break;
+            case "rain":
+            case "sleet":
+              img = "url(https://images4.alphacoders.com/831/thumb-1920-83196.jpg)";
+              $(".p").css("color","white");
+              $("a").css("color","white");
+              break;
+            case "wind":
+              img="url(http://hdwallpaperwebs.com/wp-content/uploads/2015/09/Dandelion-Flowers-Free-HD-Background-Wallpaper-06.jpg)";
+              break;
+            case "fog":
+              img = "url(http://thiswallpaper.com/cdn/hdwallpapers/1054/dock%20fog%20best%20high%20resolution%20wallpaper.jpg)";
+              $(".p").css("color","white");
+              $("a").css("color","white");
+              break;
+            case "partly-cloudy-night":
+              img = "url(https://1366x768wallpaper.com/no-watermarks/originals/2015/10/06/cloudy-night-with-full-moon._.jpg)";
+              $("h1").css("color","white");
+              $(".p").css("color","white");
+              $("a").css("color","white");
+              break;
+            default:
+              img="";
+              break;
+                     }
+          if(img){
+            $("body").css("background-image",img);
+          }
+        });
+        
+      });
+    }, showError);
+  }else {
+    alert("We couldn` retrieve your location, please check your location settings");
+    console.log("We couldn` retrieve your location, please check your location settings");
+  }
+});
+
+
+</script>
+</body></html>
